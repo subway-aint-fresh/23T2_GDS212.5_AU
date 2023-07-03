@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4029521164107907805}
   - component: {fileID: 4029521164107907806}
   - component: {fileID: 9035683415760997477}
-  - component: {fileID: 6163030886180962775}
+  - component: {fileID: -350293745726172216}
   m_Layer: 0
   m_Name: Virus
   m_TagString: Untagged
@@ -103,7 +103,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &6163030886180962775
+--- !u!114 &-350293745726172216
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
