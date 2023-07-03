@@ -25,7 +25,7 @@ public class SwappingMechanic : MonoBehaviour
     }
     void Update()
     {
-        mainCamera.transform.position = new Vector3(currentCell.transform.position.x, whiteCell.transform.position.y, -1);
+        mainCamera.transform.position = new Vector3(currentCell.transform.position.x, currentCell.transform.position.y, -1);
         playerSwaps();
     }
 
