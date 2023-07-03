@@ -11,6 +11,11 @@ public class SwappingMechanic : MonoBehaviour
     [SerializeField] private GameObject whiteCellLight; //light child of white cell 
     [SerializeField] private GameObject redCellLight;   //light child of red cell
 
+    //set tags
+    GameObject[] virusTag;
+    GameObject[] oxygenTag;
+
+
     [SerializeField] private Camera mainCamera;
     private bool isWhiteCellActive;
     private void Start()
@@ -27,6 +32,8 @@ public class SwappingMechanic : MonoBehaviour
         whiteCellLight.SetActive(true);
         redCellLight.SetActive(false);
 
+        
+        HideOxygen();
 
         isWhiteCellActive = true;
         currentCell = whiteCell;
@@ -34,17 +41,17 @@ public class SwappingMechanic : MonoBehaviour
     void Update()
     {
         mainCamera.transform.position = new Vector3(currentCell.transform.position.x, currentCell.transform.position.y, -1);
-        playerSwaps();
+        PlayerSwaps();
     }
 
-    void playerSwaps()
+    void PlayerSwaps()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             //Swap 
             if (isWhiteCellActive == true)
             {
-                //turn to red
+                //turn to cell red
                 whiteCell.GetComponent<PlayerController>().enabled = false;
                 redCell.GetComponent<PlayerController>().enabled = true;
 
@@ -56,6 +63,8 @@ public class SwappingMechanic : MonoBehaviour
                 whiteCellLight.SetActive(false);
                 redCellLight.SetActive(true);
 
+                HideVirus();
+
                 //camera change
                 currentCell = redCell;
                 isWhiteCellActive = false;
@@ -64,7 +73,7 @@ public class SwappingMechanic : MonoBehaviour
             }
             else
             {
-                //turn to white
+                //turn cell to white
                 whiteCell.GetComponent<PlayerController>().enabled = true;
                 redCell.GetComponent<PlayerController>().enabled = false;
 
@@ -76,10 +85,67 @@ public class SwappingMechanic : MonoBehaviour
                 whiteCellLight.SetActive(true);
                 redCellLight.SetActive(false);
 
+                HideOxygen();
+
                 //camera change
                 currentCell = whiteCell;
                 isWhiteCellActive = true;
 
+            }
+        }
+    }
+
+    //method for hiding oxygen
+    //ERRORS BELLOW
+    void HideOxygen()
+    {
+
+        if (oxygenTag != null)
+        {
+            
+            oxygenTag = GameObject.FindGameObjectsWithTag("Oxygen");
+
+            //hide oxygen
+            foreach (GameObject oxygen in oxygenTag)
+            {
+                oxygen.SetActive(false);
+            }
+        }
+
+        if (virusTag != null)
+        {
+            virusTag = GameObject.FindGameObjectsWithTag("Virus");
+
+            //hide oxygen
+            foreach (GameObject virus in virusTag)
+            {
+                virus.SetActive(true);
+            }
+        }
+    }
+
+    //method for hiding 
+    void HideVirus()
+    {
+        if (oxygenTag != null)
+        {
+            oxygenTag = GameObject.FindGameObjectsWithTag("Oxygen");
+
+            //hide oxygen
+            foreach (GameObject oxygen in oxygenTag)
+            {
+                oxygen.SetActive(true);
+            }
+        }
+
+        if (virusTag != null)
+        {
+            virusTag = GameObject.FindGameObjectsWithTag("Virus");
+
+            //hide oxygen
+            foreach (GameObject virus in virusTag)
+            {
+                virus.SetActive(false);
             }
         }
     }
