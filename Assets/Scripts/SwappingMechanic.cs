@@ -15,6 +15,11 @@ public class SwappingMechanic : MonoBehaviour
         //white cell moving set to default
         whiteCell.GetComponent<PlayerController>().enabled = true;
         redCell.GetComponent<PlayerController>().enabled = false;
+
+        //change following cell
+        whiteCell.GetComponent<FollowCells>().enabled = false;
+        redCell.GetComponent<FollowCells>().enabled = true;
+
         isWhiteCellActive = true;
         currentCell = whiteCell;
     }
@@ -35,6 +40,10 @@ public class SwappingMechanic : MonoBehaviour
                 whiteCell.GetComponent<PlayerController>().enabled = false;
                 redCell.GetComponent<PlayerController>().enabled = true;
 
+                //change following cell
+                whiteCell.GetComponent<FollowCells>().enabled = true;
+                redCell.GetComponent<FollowCells>().enabled = false;
+
                 //camera change
                 currentCell = redCell;
                 isWhiteCellActive = false;
@@ -45,8 +54,12 @@ public class SwappingMechanic : MonoBehaviour
                 //turn to white
                 whiteCell.GetComponent<PlayerController>().enabled = true;
                 redCell.GetComponent<PlayerController>().enabled = false;
-                currentCell = whiteCell;
 
+                //change following cell
+                whiteCell.GetComponent<FollowCells>().enabled = false;
+                redCell.GetComponent<FollowCells>().enabled = true;
+
+                currentCell = whiteCell;
                 isWhiteCellActive = true;
 
             }
