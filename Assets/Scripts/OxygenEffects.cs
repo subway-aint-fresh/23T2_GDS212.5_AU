@@ -6,7 +6,7 @@ public class OxygenEffects : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        GameManager.OxygenCollectetCounter++;
+        GameManager.spawnedOxygenCount--;
         Destroy(gameObject);
     }
 }

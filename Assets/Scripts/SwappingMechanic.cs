@@ -21,22 +21,22 @@ public class SwappingMechanic : MonoBehaviour
     private void Start()
     {
         //white cell moving set to default
-        whiteCell.GetComponent<PlayerController>().enabled = true;
-        redCell.GetComponent<PlayerController>().enabled = false;
+        whiteCell.GetComponent<PlayerController>().enabled = false;
+        redCell.GetComponent<PlayerController>().enabled = true;
 
         //change following cell
-        whiteCell.GetComponent<FollowCells>().enabled = false;
-        redCell.GetComponent<FollowCells>().enabled = true;
+        whiteCell.GetComponent<FollowCells>().enabled = true;
+        redCell.GetComponent<FollowCells>().enabled = false;
 
         //change the active light
-        whiteCellLight.SetActive(true);
-        redCellLight.SetActive(false);
+        whiteCellLight.SetActive(false);
+        redCellLight.SetActive(true);
 
-        
-        HideOxygen();
+        isWhiteCellActive = false;
 
-        isWhiteCellActive = true;
-        currentCell = whiteCell;
+        ShowOxygenForRedCell();
+
+        currentCell = redCell;
     }
     void Update()
     {
@@ -63,12 +63,9 @@ public class SwappingMechanic : MonoBehaviour
                 whiteCellLight.SetActive(false);
                 redCellLight.SetActive(true);
 
-                HideVirus();
-
                 //camera change
                 currentCell = redCell;
                 isWhiteCellActive = false;
-
 
             }
             else
@@ -85,8 +82,6 @@ public class SwappingMechanic : MonoBehaviour
                 whiteCellLight.SetActive(true);
                 redCellLight.SetActive(false);
 
-                HideOxygen();
-
                 //camera change
                 currentCell = whiteCell;
                 isWhiteCellActive = true;
@@ -97,56 +92,39 @@ public class SwappingMechanic : MonoBehaviour
 
     //method for hiding oxygen
     //ERRORS BELLOW
-    void HideOxygen()
+    void ShowVirusForWhiteCell()
     {
-
-        if (oxygenTag != null)
+        // Hide oxygen
+        oxygenTag = GameObject.FindGameObjectsWithTag("Oxygen");
+        foreach (GameObject oxygen in oxygenTag)
         {
-            
-            oxygenTag = GameObject.FindGameObjectsWithTag("Oxygen");
-
-            //hide oxygen
-            foreach (GameObject oxygen in oxygenTag)
-            {
-                oxygen.SetActive(false);
-            }
+            oxygen.SetActive(false);
         }
 
-        if (virusTag != null)
+        // Show Virus
+        virusTag = GameObject.FindGameObjectsWithTag("Virus");
+        foreach (GameObject virus in virusTag)
         {
-            virusTag = GameObject.FindGameObjectsWithTag("Virus");
-
-            //hide oxygen
-            foreach (GameObject virus in virusTag)
-            {
-                virus.SetActive(true);
-            }
+            virus.SetActive(true);
         }
     }
 
-    //method for hiding 
-    void HideVirus()
+    void ShowOxygenForRedCell()
     {
-        if (oxygenTag != null)
+        // Show Oxygen
+        oxygenTag = GameObject.FindGameObjectsWithTag("Oxygen");
+        foreach (GameObject oxygen in oxygenTag)
         {
-            oxygenTag = GameObject.FindGameObjectsWithTag("Oxygen");
-
-            //hide oxygen
-            foreach (GameObject oxygen in oxygenTag)
-            {
-                oxygen.SetActive(true);
-            }
+            oxygen.SetActive(true);
         }
 
-        if (virusTag != null)
+        // Show Virus
+        virusTag = GameObject.FindGameObjectsWithTag("Virus");
+        foreach (GameObject virus in virusTag)
         {
-            virusTag = GameObject.FindGameObjectsWithTag("Virus");
-
-            //hide oxygen
-            foreach (GameObject virus in virusTag)
-            {
-                virus.SetActive(false);
-            }
+            virus.SetActive(true);
+            //virus.SetActive(false); - ENABLE HIDE VIRUS
         }
     }
 }
+
