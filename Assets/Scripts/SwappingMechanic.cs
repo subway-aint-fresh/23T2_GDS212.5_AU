@@ -17,7 +17,7 @@ public class SwappingMechanic : MonoBehaviour
 
 
     [SerializeField] private Camera mainCamera;
-    private bool isWhiteCellActive;
+    public static bool isWhiteCellActive;
     private void Start()
     {
         //white cell moving set to default
@@ -85,7 +85,6 @@ public class SwappingMechanic : MonoBehaviour
                 //camera change
                 currentCell = whiteCell;
                 isWhiteCellActive = true;
-
             }
         }
     }

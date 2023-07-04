@@ -6,20 +6,23 @@ public class SpawnerManager : MonoBehaviour
 {
     [SerializeField] private GameObject virus;
     [SerializeField] private GameObject oxygen;
+    [SerializeField] private Transform target; // Target game object for viruses to move towards
 
     private Vector2 oxygenRange;
     private float elapsedTime = 0f;
     private int expansionCount = 0;
     private int maxExpansionCount = 3;
     private float oxygenSpawnRate = 1f;
-    private int spawnedOxygenCount = GameManager.spawnedOxygenCount;
     private int maxSpawnedOxygenCount = 750;
+    private int virusSpeed = 2;
+
+    private List<GameObject> spawnedViruses = new List<GameObject>(); // List to keep track of spawned viruses
 
     private void Start()
     {
         oxygenRange = new Vector2(-6f, 6f);
 
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < GameManager.spawnVirusStart; i++)
         {
             // Spawner Range
             SpawnRandomVirus(new Vector2(Random.Range(-30f, 30f), Random.Range(-30f, 30f)));
@@ -36,12 +39,12 @@ public class SpawnerManager : MonoBehaviour
 
     private IEnumerator SpawnOxygenEverySecond()
     {
-        while (spawnedOxygenCount < maxSpawnedOxygenCount)
+        while (GameManager.spawnedOxygenCount < maxSpawnedOxygenCount)
         {
             SpawnRandomOxygen(new Vector2(Random.Range(oxygenRange.x, oxygenRange.y), Random.Range(oxygenRange.x, oxygenRange.y)));
 
-            spawnedOxygenCount++;
-            Debug.Log(spawnedOxygenCount);
+            GameManager.spawnedOxygenCount = GameManager.spawnedOxygenCount + 1;
+            Debug.Log(GameManager.spawnedOxygenCount);
 
             yield return new WaitForSeconds(oxygenSpawnRate); // Wait for the specified spawn rate
 
@@ -79,12 +82,59 @@ public class SpawnerManager : MonoBehaviour
     private void SpawnRandomVirus(Vector2 position)
     {
         GameObject prefab = virus;
-        Instantiate(prefab, position, Quaternion.identity, transform);
+        GameObject spawnedVirus = Instantiate(prefab, position, Quaternion.identity, transform);
+        spawnedViruses.Add(spawnedVirus); // Add the spawned virus to the list
+
+        // Move the virus towards the target game object
+        if (target != null)
+        {
+            StartCoroutine(MoveVirusTowardsTarget(spawnedVirus));
+        }
+    }
+
+    private IEnumerator MoveVirusTowardsTarget(GameObject virusObject)
+    {
+        Rigidbody2D virusRigidbody = virusObject.GetComponent<Rigidbody2D>();
+
+        while (target != null)
+        {
+            Vector2 direction = (target.position - virusObject.transform.position).normalized;
+            virusRigidbody.velocity = direction * virusSpeed;
+
+            yield return null;
+
+            // Check if the virus object is destroyed
+            if (virusObject == null || !spawnedViruses.Contains(virusObject))
+            {
+                break;
+            }
+        }
     }
 
     private void SpawnRandomOxygen(Vector2 position)
     {
         GameObject prefab = oxygen;
         Instantiate(prefab, position, Quaternion.identity, transform);
+    }
+
+    private void Update()
+    {
+        if (GameManager.virusMadeContactWithRBC == true)
+        {
+            GameManager.virusMadeContactWithRBC = false;
+            int spawnAmount = 2; // Randomly determine the number of viruses to spawn (between 1 and 3)
+            GameManager.virusesCounter = GameManager.virusesCounter + 2;
+            for (int i = 0; i < spawnAmount; i++)
+            {
+                Vector2 spawnPosition = new Vector2(Random.Range(-30f, 30f), Random.Range(-30f, 30f));
+                SpawnRandomVirus(spawnPosition);
+            }
+        }
+
+        if (SwappingMechanic.isWhiteCellActive)
+        {
+            //Everytime the player switches to a white blood cell decrease the amount of oxygen is avaliable every 0.5% for each new boundary unlocked
+
+        }
     }
 }

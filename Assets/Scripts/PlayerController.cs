@@ -6,9 +6,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float playerSpeed;
+    [SerializeField] private float boundarySize;
     private Rigidbody2D rb;
     private Vector2 playerDirection;
-
 
     void Start()
     {
@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(playerDirection.x * playerSpeed, playerDirection.y * playerSpeed);
+        Vector2 newPosition = rb.position + playerDirection * playerSpeed * Time.fixedDeltaTime;
+        newPosition.x = Mathf.Clamp(newPosition.x, -boundarySize, boundarySize);
+        newPosition.y = Mathf.Clamp(newPosition.y, -boundarySize, boundarySize);
+        rb.MovePosition(newPosition);
     }
 }
