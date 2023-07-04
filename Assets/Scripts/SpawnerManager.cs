@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SpawnerManager : MonoBehaviour
 {
+    //Written by ChatGPT
     [SerializeField] private GameObject virus;
     [SerializeField] private GameObject oxygen;
     [SerializeField] private Transform target; // Target game object for viruses to move towards
@@ -18,6 +19,8 @@ public class SpawnerManager : MonoBehaviour
 
     private List<GameObject> spawnedViruses = new List<GameObject>(); // List to keep track of spawned viruses
 
+    private Coroutine oxygenSpawnCoroutine; // Coroutine reference for oxygen spawning
+
     private void Start()
     {
         oxygenRange = new Vector2(-6f, 6f);
@@ -28,23 +31,21 @@ public class SpawnerManager : MonoBehaviour
             SpawnRandomVirus(new Vector2(Random.Range(-30f, 30f), Random.Range(-30f, 30f)));
         }
 
-        for (int i = 0; i < GameManager.spawnOxygenStart; i++)
-        {
-            SpawnRandomOxygen(new Vector2(Random.Range(oxygenRange.x, oxygenRange.y), Random.Range(oxygenRange.x, oxygenRange.y)));
-        }
-
         // Start spawning oxygen every second
-        StartCoroutine(SpawnOxygenEverySecond());
+        oxygenSpawnCoroutine = StartCoroutine(SpawnOxygenEverySecond());
     }
 
     private IEnumerator SpawnOxygenEverySecond()
     {
         while (GameManager.spawnedOxygenCount < maxSpawnedOxygenCount)
         {
-            SpawnRandomOxygen(new Vector2(Random.Range(oxygenRange.x, oxygenRange.y), Random.Range(oxygenRange.x, oxygenRange.y)));
+            if (!SwappingMechanic.isWhiteCellActive)
+            {
+                SpawnRandomOxygen(new Vector2(Random.Range(oxygenRange.x, oxygenRange.y), Random.Range(oxygenRange.x, oxygenRange.y)));
 
-            GameManager.spawnedOxygenCount = GameManager.spawnedOxygenCount + 1;
-            Debug.Log(GameManager.spawnedOxygenCount);
+                GameManager.spawnedOxygenCount = GameManager.spawnedOxygenCount + 1;
+                Debug.Log(GameManager.spawnedOxygenCount);
+            }
 
             yield return new WaitForSeconds(oxygenSpawnRate); // Wait for the specified spawn rate
 
@@ -60,6 +61,11 @@ public class SpawnerManager : MonoBehaviour
                     expansionCount++;
                 }
                 elapsedTime = 0f;
+            }
+
+            if (SwappingMechanic.isWhiteCellActive)
+            {
+                DestroyRandomOxygenClones(0.5f); // Destroy 0.5% of oxygen clones
             }
         }
     }
@@ -117,6 +123,28 @@ public class SpawnerManager : MonoBehaviour
         Instantiate(prefab, position, Quaternion.identity, transform);
     }
 
+    private void DestroyRandomOxygenClones(float percentage)
+    {
+        int oxygenCountToRemove = Mathf.CeilToInt(GameManager.spawnedOxygenCount * (percentage / 100f));
+
+        for (int i = 0; i < oxygenCountToRemove; i++)
+        {
+            if (GameManager.spawnedOxygenCount > 0)
+            {
+                GameObject[] oxygenObjects = GameObject.FindGameObjectsWithTag("Oxygen");
+                int randomIndex = Random.Range(0, oxygenObjects.Length);
+                GameObject oxygenObject = oxygenObjects[randomIndex];
+
+                Destroy(oxygenObject);
+                GameManager.spawnedOxygenCount--;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
     private void Update()
     {
         if (GameManager.virusMadeContactWithRBC == true)
@@ -129,12 +157,6 @@ public class SpawnerManager : MonoBehaviour
                 Vector2 spawnPosition = new Vector2(Random.Range(-30f, 30f), Random.Range(-30f, 30f));
                 SpawnRandomVirus(spawnPosition);
             }
-        }
-
-        if (SwappingMechanic.isWhiteCellActive)
-        {
-            //Everytime the player switches to a white blood cell decrease the amount of oxygen is avaliable every 0.5% for each new boundary unlocked
-
         }
     }
 }

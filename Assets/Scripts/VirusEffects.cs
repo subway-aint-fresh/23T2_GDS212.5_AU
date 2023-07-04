@@ -18,6 +18,7 @@ public class VirusEffects : MonoBehaviour
 
         if (!SwappingMechanic.isWhiteCellActive)
         {
+            GameManager.virusesCounter = GameManager.virusesCounter - 1;
             GameManager.virusMadeContactWithRBC = true;
             Destroy(gameObject);
         }
