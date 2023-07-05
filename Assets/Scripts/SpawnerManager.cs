@@ -1,6 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class SpawnerManager : MonoBehaviour
 {
@@ -16,6 +16,8 @@ public class SpawnerManager : MonoBehaviour
     private float oxygenSpawnRate = 1f;
     private int maxSpawnedOxygenCount = 750;
     private int virusSpeed = 2;
+    private float destroyOxygenPercentage = 1;
+    private int virusSpawnAmount = 3;
 
     private List<GameObject> spawnedViruses = new List<GameObject>(); // List to keep track of spawned viruses
 
@@ -39,14 +41,6 @@ public class SpawnerManager : MonoBehaviour
     {
         while (GameManager.spawnedOxygenCount < maxSpawnedOxygenCount)
         {
-            if (!SwappingMechanic.isWhiteCellActive)
-            {
-                SpawnRandomOxygen(new Vector2(Random.Range(oxygenRange.x, oxygenRange.y), Random.Range(oxygenRange.x, oxygenRange.y)));
-
-                GameManager.spawnedOxygenCount = GameManager.spawnedOxygenCount + 1;
-                Debug.Log(GameManager.spawnedOxygenCount);
-            }
-
             yield return new WaitForSeconds(oxygenSpawnRate); // Wait for the specified spawn rate
 
             elapsedTime += oxygenSpawnRate;
@@ -65,7 +59,14 @@ public class SpawnerManager : MonoBehaviour
 
             if (SwappingMechanic.isWhiteCellActive)
             {
-                DestroyRandomOxygenClones(0.5f); // Destroy 0.5% of oxygen clones
+                DestroyRandomOxygenClones(destroyOxygenPercentage); // Destroy oxygen clones based on the percentage
+            }
+            else
+            {
+                SpawnRandomOxygen(new Vector2(Random.Range(oxygenRange.x, oxygenRange.y), Random.Range(oxygenRange.x, oxygenRange.y)));
+
+                GameManager.spawnedOxygenCount++;
+                Debug.Log(GameManager.spawnedOxygenCount);
             }
         }
     }
@@ -136,7 +137,7 @@ public class SpawnerManager : MonoBehaviour
                 GameObject oxygenObject = oxygenObjects[randomIndex];
 
                 Destroy(oxygenObject);
-                GameManager.spawnedOxygenCount--;
+                GameManager.spawnedOxygenCount = GameManager.spawnedOxygenCount - oxygenCountToRemove;
             }
             else
             {
@@ -150,9 +151,8 @@ public class SpawnerManager : MonoBehaviour
         if (GameManager.virusMadeContactWithRBC == true)
         {
             GameManager.virusMadeContactWithRBC = false;
-            int spawnAmount = 2; // Randomly determine the number of viruses to spawn (between 1 and 3)
-            GameManager.virusesCounter = GameManager.virusesCounter + 2;
-            for (int i = 0; i < spawnAmount; i++)
+            GameManager.virusesCounter = GameManager.virusesCounter + virusSpawnAmount;
+            for (int i = 0; i < virusSpawnAmount; i++)
             {
                 Vector2 spawnPosition = new Vector2(Random.Range(-30f, 30f), Random.Range(-30f, 30f));
                 SpawnRandomVirus(spawnPosition);

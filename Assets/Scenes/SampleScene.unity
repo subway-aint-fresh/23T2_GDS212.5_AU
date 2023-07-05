@@ -1535,7 +1535,7 @@ GameObject:
   - component: {fileID: 1756376567}
   - component: {fileID: 1756376566}
   - component: {fileID: 1756376565}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: White Blood Cell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1774,7 +1774,7 @@ GameObject:
   - component: {fileID: 1936571947}
   - component: {fileID: 1936571949}
   - component: {fileID: 1936571948}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Red Blood Cell
   m_TagString: Untagged
   m_Icon: {fileID: 0}

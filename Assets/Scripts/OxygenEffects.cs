@@ -6,10 +6,9 @@ public class OxygenEffects : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!SwappingMechanic.isWhiteCellActive)
+        if (!SwappingMechanic.isWhiteCellActive && collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             GameManager.spawnedOxygenCount = GameManager.spawnedOxygenCount - 1;
-            
             Destroy(gameObject);
         }
     }
