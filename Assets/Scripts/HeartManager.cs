@@ -9,7 +9,7 @@ public class HeartManager : MonoBehaviour
     {
         if (!SwappingMechanic.isWhiteCellActive && collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            UIManager.Heal(GameManager.oxygenCollected * 10);
+            UIManager.Heal(GameManager.oxygenCollected * 4);
             Debug.Log("healed:" + GameManager.oxygenCollected);
 
             GameManager.oxygenCollected = 0;

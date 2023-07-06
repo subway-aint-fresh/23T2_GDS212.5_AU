@@ -16,10 +16,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float damageInterval = 4f;
     [SerializeField] private float damageAmount = 10f;
 
-    public static bool fillHealthBar = false;
-
     private float _damageTimer = 0f;
-
     void Update()
     {
         textOxygen.text = "Oxygen: " + GameManager.spawnedOxygenCount;
@@ -33,17 +30,15 @@ public class UIManager : MonoBehaviour
             {
                 TakeDamage();
                 _damageTimer = 0f;
+                if (GameManager.spawnedOxygenCount <= 0)
+                {
+                    healthAmount = healthAmount - 10;
+                }
             }
         }
-
-        if (fillHealthBar)
+        if (healthBar != null)
         {
-            if (healthBar != null)
-            {
-                healthBar.fillAmount = healthAmount / 100f;
-                fillHealthBar = false;
-            }
-            
+            healthBar.fillAmount = healthAmount / 100f;
         }
     }
     
@@ -59,7 +54,7 @@ public class UIManager : MonoBehaviour
                 Debug.Log(healthAmount);
             }
         }
-        
+
     }
 
     //Called if oxygen has been collected and in trigger of heart
@@ -68,6 +63,5 @@ public class UIManager : MonoBehaviour
     {
         healthAmount += healingAmount;
         healthAmount = Mathf.Clamp(healthAmount, 0, 100);
-        fillHealthBar = true;
     }
 }

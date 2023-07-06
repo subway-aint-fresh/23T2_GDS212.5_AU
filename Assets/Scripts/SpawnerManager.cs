@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class SpawnerManager : MonoBehaviour
 {
@@ -13,24 +14,34 @@ public class SpawnerManager : MonoBehaviour
     private float elapsedTime = 0f;
     private int expansionCount = 0;
     private int maxExpansionCount = 3;
-    private float oxygenSpawnRate = 1f;
+    private float oxygenSpawnRate = 0.5f;
     private int maxSpawnedOxygenCount = 750;
-    private float virusSpeed = 1.5f;
     private float destroyOxygenPercentage = 1;
     private int virusSpawnAmount = 3;
 
     private List<GameObject> spawnedViruses = new List<GameObject>(); // List to keep track of spawned viruses
 
+    private float virusSpeed = 1f;
+    private float virusSpeedChangeInterval;
+    private float elapsedTimeSinceSpeedChange = 0f;
+    private float decreaseSpeedInterval;
+    private bool hasDecreasedSpeed = false;
+
+    private int loseScene = 1;
+    private int winScene = 2;
+
     private Coroutine oxygenSpawnCoroutine; // Coroutine reference for oxygen spawning
 
     private void Start()
     {
-        oxygenRange = new Vector2(-6f, 6f);
+        virusSpeedChangeInterval = Random.Range(6, 10); //seconds to change speed
+        decreaseSpeedInterval = Random.Range(10f, 12f); // Random interval for decreasing the speed
+        oxygenRange = new Vector2(-5f, 5f);
 
         for (int i = 0; i < GameManager.spawnVirusStart; i++)
         {
             // Spawner Range
-            SpawnRandomVirus(new Vector2(Random.Range(-30f, 30f), Random.Range(-30f, 30f)));
+            SpawnRandomVirus(new Vector2(Random.Range(-36f, 36f), Random.Range(-36f, 36f)));
         }
 
         // Start spawning oxygen every second
@@ -56,7 +67,20 @@ public class SpawnerManager : MonoBehaviour
                 }
                 elapsedTime = 0f;
             }
-
+            elapsedTimeSinceSpeedChange += oxygenSpawnRate;
+            if (virusSpeed == 4f && !hasDecreasedSpeed)
+            {
+                hasDecreasedSpeed = true;
+                ChangeVirusSpeed(-1f); // Decrease the virus speed by 1
+            }
+            else
+            {
+                if (elapsedTimeSinceSpeedChange >= virusSpeedChangeInterval && !hasDecreasedSpeed)
+                {
+                    elapsedTimeSinceSpeedChange = 0f;
+                    ChangeVirusSpeed(1f); // Increase the virus speed by 1
+                }
+            }
             if (SwappingMechanic.isWhiteCellActive)
             {
                 DestroyRandomOxygenClones(destroyOxygenPercentage); // Destroy oxygen clones based on the percentage
@@ -67,6 +91,22 @@ public class SpawnerManager : MonoBehaviour
 
                 GameManager.spawnedOxygenCount++;
                 Debug.Log(GameManager.spawnedOxygenCount);
+            }
+        }
+    }
+    private void ChangeVirusSpeed(float speedChange)
+    {
+        virusSpeed += speedChange;
+        Debug.Log("New virus speed: " + virusSpeed);
+
+        // Update the virus speed for all spawned viruses
+        foreach (GameObject spawnedVirus in spawnedViruses)
+        {
+            if (spawnedVirus != null)
+            {
+                Rigidbody2D virusRigidbody = spawnedVirus.GetComponent<Rigidbody2D>();
+                Vector2 direction = (target.position - spawnedVirus.transform.position).normalized;
+                virusRigidbody.velocity = direction * virusSpeed;
             }
         }
     }
@@ -148,15 +188,35 @@ public class SpawnerManager : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.virusMadeContactWithRBC == true)
+        if (GameManager.virusMadeContactWithRBC)
         {
             GameManager.virusMadeContactWithRBC = false;
-            GameManager.virusesCounter = GameManager.virusesCounter + virusSpawnAmount;
+            GameManager.virusesCounter += virusSpawnAmount;
             for (int i = 0; i < virusSpawnAmount; i++)
             {
                 Vector2 spawnPosition = new Vector2(Random.Range(-30f, 30f), Random.Range(-30f, 30f));
                 SpawnRandomVirus(spawnPosition);
             }
         }
+        if (UIManager.healthAmount <= 0)
+        {
+            Lose();
+        }
+        if(GameManager.virusesCounter <= 0)
+        {
+            Win();
+        }
+
     }
+    void Lose()
+    {
+        SceneManager.LoadScene(loseScene);
+    }
+
+    void Win()
+    {
+        SceneManager.LoadScene(winScene);
+    }
+
+   
 }

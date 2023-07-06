@@ -19,6 +19,7 @@ public class VirusEffects : MonoBehaviour
         if (!SwappingMechanic.isWhiteCellActive && collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             GameManager.virusesCounter = GameManager.virusesCounter - 1;
+            UIManager.healthAmount = UIManager.healthAmount - 1;
             GameManager.virusMadeContactWithRBC = true;
             Destroy(gameObject);
         }

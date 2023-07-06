@@ -40,8 +40,15 @@ public class SwappingMechanic : MonoBehaviour
     }
     void Update()
     {
-        mainCamera.transform.position = new Vector3(currentCell.transform.position.x, currentCell.transform.position.y, -1);
-        PlayerSwaps();
+        if (UIManager.healthAmount > 0 && GameManager.virusesCounter > 0)
+        {
+            mainCamera.transform.position = new Vector3(currentCell.transform.position.x, currentCell.transform.position.y, -1);
+            PlayerSwaps();
+        }
+        else
+        {
+            mainCamera.transform.position = new Vector3(0,0, -1);
+        }
     }
 
     void PlayerSwaps()
