@@ -11,14 +11,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI textOxygenCollected;
 
     [SerializeField] private Image healthBar;
-    [SerializeField] private float healthAmount = 100f;
+    public static float healthAmount = 100f;
 
     [SerializeField] private float damageInterval = 4f;
     [SerializeField] private float damageAmount = 10f;
 
-    private float damageTimer = 0f;
+    public static bool fillHealthBar = false;
 
-    [SerializeField] private int oxygenCollected;
+    private float _damageTimer = 0f;
 
     void Update()
     {
@@ -28,35 +28,46 @@ public class UIManager : MonoBehaviour
 
         if (GameManager.virusesCounter > 0)
         {
-            damageTimer += Time.deltaTime;
-            if (damageTimer >= damageInterval)
+            _damageTimer += Time.deltaTime;
+            if (_damageTimer >= damageInterval)
             {
                 TakeDamage();
-                damageTimer = 0f;
+                _damageTimer = 0f;
             }
         }
 
-        Heal(oxygenCollected);
+        if (fillHealthBar)
+        {
+            if (healthBar != null)
+            {
+                healthBar.fillAmount = healthAmount / 100f;
+                fillHealthBar = false;
+            }
+            
+        }
     }
     
     //Called if there are virus in the scene 
-    void TakeDamage()
+    public void TakeDamage()
     {
-        if (healthAmount > 0)
+        if (healthBar != null)
         {
-            healthAmount -= damageAmount;
-            healthBar.fillAmount = healthAmount / 100f;
-            Debug.Log(healthAmount);
+            if (healthAmount > 0)
+            {
+                healthAmount -= damageAmount;
+                healthBar.fillAmount = healthAmount / 100f;
+                Debug.Log(healthAmount);
+            }
         }
+        
     }
 
     //Called if oxygen has been collected and in trigger of heart
     //Healed by number of oxygen collected
-    public void Heal(float healingAmount)
+    public static void Heal(float healingAmount)
     {
         healthAmount += healingAmount;
         healthAmount = Mathf.Clamp(healthAmount, 0, 100);
-
-        healthBar.fillAmount = healthAmount / 100f;
+        fillHealthBar = true;
     }
 }

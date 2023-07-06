@@ -6067,7 +6067,7 @@ RectTransform:
   - {fileID: 1505469571}
   - {fileID: 1361163320}
   m_Father: {fileID: 725379453}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -6105,8 +6105,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textOxygen: {fileID: 282483184}
   textVirus: {fileID: 471475823}
+  textOxygenCollected: {fileID: 1009264560}
   healthBar: {fileID: 1361163321}
-  healthAmount: 100
+  damageInterval: 4
+  damageAmount: 10
 --- !u!4 &767342089
 Transform:
   m_ObjectHideFlags: 0
