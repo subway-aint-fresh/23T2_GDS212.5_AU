@@ -9,4 +9,9 @@ public class ButtonsManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+
+    public void ButtonPLay()
+    {
+        SceneManager.LoadScene(1);
+    }
 }

@@ -27,8 +27,8 @@ public class SpawnerManager : MonoBehaviour
     private float decreaseSpeedInterval;
     private bool hasDecreasedSpeed = false;
 
-    private int loseScene = 1;
-    private int winScene = 2;
+    private int loseScene = 2;
+    private int winScene = 3;
 
     private Coroutine oxygenSpawnCoroutine; // Coroutine reference for oxygen spawning
 
