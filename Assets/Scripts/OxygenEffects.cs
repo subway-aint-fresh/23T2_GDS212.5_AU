@@ -9,6 +9,7 @@ public class OxygenEffects : MonoBehaviour
         if (!SwappingMechanic.isWhiteCellActive && collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             GameManager.spawnedOxygenCount = GameManager.spawnedOxygenCount - 1;
+            GameManager.oxygenCollected = GameManager.oxygenCollected + 1;
             Destroy(gameObject);
         }
     }

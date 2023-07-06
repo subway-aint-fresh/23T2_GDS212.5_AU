@@ -12,8 +12,8 @@ public class GameManager : MonoBehaviour
 
     //Oxygen
     public static int spawnOxygenStart = 3;
-    public static int OxygenSpawned = spawnVirusStart;
     public static int spawnedOxygenCount = 0;
+    public static int oxygenCollected = 0;
 
-    //Max Area = Vector2(Random.Range(-30f, 30f, Random.Range(-30f, 30f))
+    //Max Area = Vector2(Random.Range(-36f, 36f, Random.Range(-36f, 36f))
 }

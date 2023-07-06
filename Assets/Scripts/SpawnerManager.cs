@@ -15,7 +15,7 @@ public class SpawnerManager : MonoBehaviour
     private int maxExpansionCount = 3;
     private float oxygenSpawnRate = 1f;
     private int maxSpawnedOxygenCount = 750;
-    private int virusSpeed = 2;
+    private float virusSpeed = 1.5f;
     private float destroyOxygenPercentage = 1;
     private int virusSpawnAmount = 3;
 
