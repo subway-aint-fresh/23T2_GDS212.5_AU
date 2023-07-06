@@ -13,8 +13,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image healthBar;
     [SerializeField] private float healthAmount = 100f;
 
-    private float damageInterval = 4f;
+    [SerializeField] private float damageInterval = 4f;
+    [SerializeField] private float damageAmount = 10f;
+
     private float damageTimer = 0f;
+
+    [SerializeField] private int oxygenCollected;
 
     void Update()
     {
@@ -31,18 +35,23 @@ public class UIManager : MonoBehaviour
                 damageTimer = 0f;
             }
         }
-    }
 
+        Heal(oxygenCollected);
+    }
+    
+    //Called if there are virus in the scene 
     void TakeDamage()
     {
         if (healthAmount > 0)
         {
-            healthAmount -= 10;
+            healthAmount -= damageAmount;
             healthBar.fillAmount = healthAmount / 100f;
             Debug.Log(healthAmount);
         }
     }
 
+    //Called if oxygen has been collected and in trigger of heart
+    //Healed by number of oxygen collected
     public void Heal(float healingAmount)
     {
         healthAmount += healingAmount;
